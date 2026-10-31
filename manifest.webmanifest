@@ -4,7 +4,7 @@
   "description": "สมุดจดราคาที่ดิน สำหรับวางแผนซื้อที่ดินสร้างบ้าน",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#FBEDF1",
+  "background_color": "#FFFFFF",
   "theme_color": "#FFF6F8",
   "icons": [
     {

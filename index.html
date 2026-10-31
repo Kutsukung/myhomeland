@@ -4,38 +4,45 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>MyHome Land</title>
-
-<!-- ไอคอนตอน "เพิ่มไปยังหน้าจอโฮม" -->
+<meta name="theme-color" content="#FFF6F8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MyHome Land">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="apple-mobile-web-app-title" content="MyHome Land">
-<meta name="application-name" content="MyHome Land">
-<meta name="theme-color" content="#D94A3A">
-
 <style>
-  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #FBEDF1; color: #3C1037;
-         font: 500 17px/1.5 'Sarabun', 'Leelawadee UI', 'Thonburi', sans-serif; text-align: center; }
-  img { width: 112px; height: 112px; border-radius: 26px; display: block; margin: 0 auto 14px; }
-  a { color: #661958; }
-  .box { padding: 24px; }
-  .dim { font-size: 14px; color: #704866; margin-top: 16px; }
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #FBEDF1; }
+  iframe { position: fixed; top: env(safe-area-inset-top, 0px); left: 0; width: 100%;
+           height: calc(100% - env(safe-area-inset-top, 0px)); border: 0; background: #FBEDF1; }
+  #splash { position: fixed; inset: 0; z-index: 2; display: grid; place-items: center; text-align: center;
+            color: #3C1037; font: 500 16px/1.5 'Sarabun', 'Leelawadee UI', 'Thonburi', sans-serif;
+            background: #FBEDF1; transition: opacity .3s; }
+  #splash.hide { opacity: 0; pointer-events: none; }
+  #splash img { width: 112px; height: 112px; border-radius: 26px; display: block; margin: 0 auto 14px; }
+  .spin { width: 34px; height: 34px; margin: 0 auto 12px; border-radius: 50%;
+          border: 4px solid rgba(207,50,94,.18); border-top-color: #D94A3A; animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
-<div class="box">
-  <img src="icon-192.png" alt="">
-  <div>กำลังเปิด MyHome Land…</div>
-  <p class="dim">ถ้าหน้านี้ไม่เปลี่ยนภายใน 3 วินาที <a id="go" href="#">กดที่นี่</a></p>
-</div>
+<div id="splash"><div><img src="icon-192.png" alt=""><div class="spin"></div>กำลังเปิด MyHome Land…</div></div>
+<iframe id="app" title="MyHome Land" allow="clipboard-write; geolocation"></iframe>
 <script>
-  // ✏️ ใส่ลิงก์แอป (ที่ลงท้ายด้วย /exec) ของคุณตรงนี้
+  /* ลิงก์ Web app จาก Apps Script (ลงท้าย /exec) — ไม่ต้องแก้อีก ตราบใดที่อัปเดตด้วย Manage deployments → New version */
   var APP_URL = 'https://script.google.com/macros/s/AKfycbwY9ap6tHE7sPHOrODEe6_Rpg459feyDVVn2cW5bW-1HJK7Bc6-xd6wsSZNqNSaWQFG/exec';
 
-  document.getElementById('go').href = APP_URL;
-  location.replace(APP_URL);
+  /* หน้านี้ทำอย่างเดียว: ให้ไอคอนบนหน้าจอโฮม แล้วฝังแอปจริงไว้เต็มจอ
+     หน้าตาและการทำงานทั้งหมดอยู่ใน Apps Script จึงไม่ต้องกลับมาแก้ไฟล์นี้ */
+  var splash = document.getElementById('splash');
+  function hide() { splash.className = 'hide'; }
+  window.addEventListener('message', function (e) {
+    if (/^https:\/\/[a-z0-9.-]+\.googleusercontent\.com$/.test(e.origin) && e.data && e.data.type === 'mhl:ready') hide();
+  });
+  document.getElementById('app').src = APP_URL;
+  setTimeout(hide, 8000);
 </script>
 </body>
 </html>
